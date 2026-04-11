@@ -1,4 +1,4 @@
-# TubeTap - YouTube Comment Exporter/Downloader
+# TubeTap - YouTube Comment Exporter/Downloader in HTML/JS
 
 A fully browser-based HTML/JS tool for exporting YouTube comments. No backend, no tracking, no data storage. All data stays local in your browser. Runs entirely as a static web page.
 
