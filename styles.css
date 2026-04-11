@@ -1,0 +1,38 @@
+/* ==========================================
+   YouTube Comment Exporter - Custom styles
+   (DaisyUI + Tailwind handle most styling)
+   ========================================== */
+
+/* Debug log panel */
+
+.debug-log {
+    background: #1e1e1e;
+    color: #cccccc;
+    font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+    padding: 14px;
+    border-radius: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    line-height: 1.55;
+}
+
+.debug-log .log-entry {
+    margin-bottom: 2px;
+}
+
+.debug-log .log-time {
+    color: #6a9955;
+}
+
+.debug-log .log-skip {
+    color: #ce9178;
+}
+
+.debug-log .log-ok {
+    color: #4ec9b0;
+}
+
+.debug-log .log-error {
+    color: #f44747;
+}

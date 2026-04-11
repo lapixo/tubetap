@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeTap - YouTube Comment Exporter</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-base-200 min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 py-6 pb-12">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold">TubeTap</h1>
+            <p class="text-base text-base-content/70 mt-1">YouTube Comment Exporter</p>
+            <div class="mt-3 inline-flex flex-wrap justify-center gap-2 text-xs">
+                <span class="badge badge-outline badge-sm gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    100% browser-based
+                </span>
+                <span class="badge badge-outline badge-sm gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    All data stays local
+                </span>
+                <span class="badge badge-outline badge-sm gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728A9 9 0 015.636 5.636"/></svg>
+                    No server
+                </span>
+            </div>
+            <p class="text-xs text-base-content/50 mt-3 max-w-lg mx-auto">Export comments as JSON or CSV and feed them into ChatGPT, Claude, Gemini or other AI tools for sentiment analysis, topic summaries, trend detection and more.</p>
+        </header>
+
+        <!-- API Key -->
+        <div class="card bg-base-100 shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-base">API Key</h2>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">YouTube Data API v3 Key</legend>
+                    <div class="flex gap-2">
+                        <input type="password" id="apiKey" placeholder="Enter your API key" class="input grow" autocomplete="off">
+                        <button type="button" id="toggleKeyBtn" class="btn btn-soft btn-sm self-center">Show</button>
+                    </div>
+                    <p class="label text-xs">Your key is kept in memory only and never stored anywhere.</p>
+                </fieldset>
+            </div>
+        </div>
+
+        <!-- Mode -->
+        <div class="card bg-base-100 shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-base">Mode</h2>
+                <div role="tablist" class="tabs tabs-box mb-4">
+                    <button role="tab" class="tab tab-active" id="modeSearch">Search</button>
+                    <button role="tab" class="tab" id="modeDirect">Direct Video</button>
+                </div>
+
+                <div id="searchOptions" class="mode-section">
+                    <fieldset class="fieldset mb-3">
+                        <legend class="fieldset-legend">Search Term</legend>
+                        <input type="text" id="searchTerm" placeholder="Enter search keywords" class="input w-full">
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Number of Videos (with comments)</legend>
+                        <input type="number" id="videoCount" value="20" min="1" max="500" class="input w-36">
+                        <p class="label text-xs">Videos without exportable comments are skipped automatically.</p>
+                    </fieldset>
+                </div>
+
+                <div id="directOptions" class="mode-section hidden">
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Video URL or ID</legend>
+                        <input type="text" id="videoInput" placeholder="https://youtube.com/watch?v=... or video ID" class="input w-full">
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <!-- Options -->
+        <div class="card bg-base-100 shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-base">Options</h2>
+                <div class="flex flex-col sm:flex-row gap-4 mb-3">
+                    <fieldset class="fieldset flex-1">
+                        <legend class="fieldset-legend">Language</legend>
+                        <select id="language" class="select w-full">
+                            <option value="de">German</option>
+                            <option value="en">English</option>
+                            <option value="fr">French</option>
+                            <option value="es">Spanish</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="it">Italian</option>
+                            <option value="nl">Dutch</option>
+                            <option value="ru">Russian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hi">Hindi</option>
+                            <option value="tr">Turkish</option>
+                            <option value="pl">Polish</option>
+                            <option value="sv">Swedish</option>
+                        </select>
+                        <p class="label text-xs">Biases search results toward the selected language (best-effort).</p>
+                    </fieldset>
+                    <fieldset class="fieldset flex-1">
+                        <legend class="fieldset-legend">Output Format</legend>
+                        <select id="outputFormat" class="select w-full">
+                            <option value="json">JSON</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </fieldset>
+                </div>
+                <label class="label cursor-pointer justify-start gap-2">
+                    <input type="checkbox" id="debugMode" class="checkbox checkbox-sm">
+                    <span class="text-sm">Enable debug logging</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card bg-base-100 shadow-sm mb-4">
+            <div class="card-body flex-row gap-3 items-center">
+                <button type="button" id="startBtn" class="btn btn-primary">Start Export</button>
+                <button type="button" id="cancelBtn" class="btn btn-error btn-outline hidden">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Error container -->
+        <div id="errorContainer"></div>
+
+        <!-- Progress -->
+        <div id="progressSection" class="card bg-base-100 shadow-sm mb-4 hidden">
+            <div class="card-body">
+                <h2 class="card-title text-base">Progress</h2>
+                <progress id="progressBar" class="progress progress-primary w-full" value="0" max="100"></progress>
+                <p id="progressStatus" class="text-sm mt-2 whitespace-pre-line"></p>
+            </div>
+        </div>
+
+        <!-- Debug -->
+        <div id="debugSection" class="card bg-base-100 shadow-sm mb-4 hidden">
+            <div class="card-body">
+                <h2 class="card-title text-base">Debug Log</h2>
+                <div id="debugLog" class="debug-log"></div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="resultSection" class="card bg-base-100 shadow-sm mb-4 hidden">
+            <div class="card-body">
+                <h2 class="card-title text-base">Results</h2>
+                <div id="resultSummary" class="text-sm mb-3"></div>
+                <button type="button" id="downloadBtn" class="btn btn-primary">Download Export</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
