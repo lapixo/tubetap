@@ -2,6 +2,8 @@
 
 A fully browser-based HTML/JS tool for exporting YouTube comments. No backend, no tracking, no data storage. All data stays local in your browser. Runs entirely as a static web page.
 
+![ScreenshoTubeTap](screenshot.png)
+
 ## What it does
 
 - **Search mode**: Search YouTube for videos by keyword and export comments from multiple videos at once.
